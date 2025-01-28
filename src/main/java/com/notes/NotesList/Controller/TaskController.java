@@ -18,5 +18,6 @@ public class TaskController {
     public String getTask(){
         List<Task> tasks=taskService.getAllTasks();
         return "tasks";
+
     }
 }
