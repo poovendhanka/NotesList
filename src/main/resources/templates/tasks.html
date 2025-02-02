@@ -27,7 +27,8 @@
     <!-- Add Task Card -->
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
-            <form action="/" method="post">
+            <form action="/tasks" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                 <div class="mb-3">
                     <label for="title" class="form-label fw-medium">Task Title</label>
                     <input type="text" class="form-control" id="title" name="title" required

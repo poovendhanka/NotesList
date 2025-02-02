@@ -1,6 +1,7 @@
 package com.notes.NotesList.Service;
 
 import com.notes.NotesList.model.Task;
+import com.notes.NotesList.model.User;
 import com.notes.NotesList.repository.TaskRepo;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,11 @@ public class TaskService {
         return taskRepo.findAll();
     }
 
-    public void createTask(String title){
+    public void createTask(String title, User user){
         Task task=new Task();
         task.setTitle(title);
         task.setCompleted(false);
+        task.setUser(user);
         taskRepo.save(task);
     }
     public void deleteTask(Long id){
