@@ -28,4 +28,5 @@ ENV PORT 8080
 EXPOSE $PORT
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "noteslist.jar", "--server.port=$PORT"]
+ENTRYPOINT ["sh", "-c", "java -jar noteslist.jar --server.port=$PORT"]
+
