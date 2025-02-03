@@ -1,35 +1,31 @@
-# Use an official OpenJDK runtime as the base image
+# Stage 1: Build stage (using Maven)
 FROM eclipse-temurin:17-jdk-jammy as builder
 
-# Set the working directory inside the container to /app (or any other directory name you prefer)
 WORKDIR /noteslist
 
-# Copy the Maven build files
+# Copy the Maven wrapper and source files
 COPY pom.xml .
 COPY src ./src
-
-# Copy the Maven wrapper files
 COPY mvnw .
 COPY .mvn ./.mvn
 
-# Build the application using Maven (without running tests)
+# Ensure mvnw is executable
+RUN chmod +x mvnw
+
+# Run the Maven build command
 RUN ./mvnw clean package -DskipTests
 
-# Use a smaller base image for the final stage
+# Stage 2: Production image (using JRE)
 FROM eclipse-temurin:17-jre-jammy
 
-# Set the working directory inside the container (again, you can use /noteslist if desired)
 WORKDIR /noteslist
 
-# Copy the JAR file from the builder stage
-# Change the filename to match your generated JAR file (use * if unsure of the full name)
-COPY --from=builder /noteslist/target/Noteslist-*.jar noteslist.jar
+# Copy the built JAR file
+COPY --from=builder /noteslist/target/NotesList-*.jar noteslist.jar
 
-# Expose the port your application runs on (default Spring Boot port is 8080)
-EXPOSE 8080
+# Set the environment variable for the port
+ENV PORT 8080
+EXPOSE $PORT
 
-# Set environment variables for production
-ENV SPRING_PROFILES_ACTIVE=prod
-
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "noteslist.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "noteslist.jar", "--server.port=$PORT"]
