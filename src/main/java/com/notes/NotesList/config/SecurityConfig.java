@@ -22,9 +22,13 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/tasks", true)
+                        .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
+                        .logoutUrl("/logout") // Logout endpoint
+                        .logoutSuccessUrl("/login") // Redirect to login page after logout
+                        .invalidateHttpSession(true) // Invalidate the session
+                        .deleteCookies("JSESSIONID") // Delete the session cookie
                 );
         return http.build();
     }
